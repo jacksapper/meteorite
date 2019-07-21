@@ -10,7 +10,7 @@ func _ready():
 	set_sfx_volume(0.5)
 	set_music_volume(0.5)
 	set_mouse_sensitivity(0.02)
-	set_fullscreen(true) 
+	set_fullscreen(false) 
 	
 func linear_to_db(vol):
 	#var vol_db = -80
