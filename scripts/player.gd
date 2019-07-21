@@ -72,7 +72,7 @@ func process_jump(event):
 		Sound.play_sound("player_jump", 1 + (jump_counter - 1) * 0.1)
 		
 func process_shoot(event):
-	if event is InputEventAction and event.is_pressed("shoot"):
+	if event.is_action_pressed("shoot"):
 		gun.shoot()
 			
 	if event is InputEventKey and event.pressed:
