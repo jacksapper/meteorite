@@ -45,11 +45,6 @@ func _process(delta):
 	
 func _unhandled_input(event): # it's very important to use UNHANDLED INPUT so things on top can steal mouse input
 	body_state.handle_input(event)
-	
-	# TODO REMOVE
-#	if event is InputEventKey and event.scancode == KEY_K:
-#		hurt(100, BulletColor.RED)
-		
 	if event.is_action_pressed("ui_cancel"):
 		Dialogs.add_pause_dialog()
 	
