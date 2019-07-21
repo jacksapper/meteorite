@@ -15,7 +15,7 @@ func fixed_update(delta):
 	update_footstep_timer()
 	check_play_land_footstep()	
 	fsm_owner.process_gravity(delta)
-	
+	fsm_owner.process_action_look()
 	if fsm_owner.is_on_floor():
 		can_boost = true
 	

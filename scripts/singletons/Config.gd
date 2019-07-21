@@ -3,6 +3,7 @@ extends Node
 var sfx_volume
 var music_volume
 var mouse_sensitivity
+var controller_sensitivity setget set_controller_sensitivity
 var fullscreen
 
 func _ready():
@@ -10,6 +11,7 @@ func _ready():
 	set_sfx_volume(0.5)
 	set_music_volume(0.5)
 	set_mouse_sensitivity(0.02)
+	set_controller_sensitivity(0.1)
 	set_fullscreen(false) 
 	
 func linear_to_db(vol):
@@ -30,6 +32,9 @@ func set_music_volume(vol):
 	
 func set_mouse_sensitivity(value):
 	mouse_sensitivity = value
+	
+func set_controller_sensitivity(value: float) -> void:
+	controller_sensitivity = value
 	
 func set_fullscreen(value):
 	fullscreen = value

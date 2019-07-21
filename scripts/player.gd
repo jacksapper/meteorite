@@ -14,7 +14,6 @@ onready var gun_container = $cam/gun_container
 onready var gun = gun_container.get_node("gun")
 onready var body_state = $body_state
 
-
 var velocity = Vector3(0,0,0)
 var pitch = 0
 var yaw = PI/2
@@ -24,40 +23,40 @@ var in_warning_state = false
 var boss_defeated = false
 var can_play_hit_sound = true
 
-func _ready():
+func _ready() -> void:
 	tween.interpolate_property(cam, "fov", 0.1, cam.fov, 1.0,Tween.TRANS_BACK, Tween.EASE_OUT)
 	tween.start()
-	
 	body_state.switch_state_immediately("rest")
-	
 	yield(get_tree(), "idle_frame")
 	yield(get_tree(), "idle_frame")
-	$ui/loading.hide()	
+	$ui/loading.hide()
 	
-func _process(delta):
-	
+func _process(delta) -> void:
 	cam.rotation = Vector3(pitch, yaw, 0)
 	gun_rot = gun_rot.slerp(Quat(cam.global_transform.basis), 0.3)
 	gun_container.global_transform.basis = Basis(gun_rot)
-	
 	body_state.update(delta)
 	
-	
-func _unhandled_input(event): # it's very important to use UNHANDLED INPUT so things on top can steal mouse input
+func _unhandled_input(event) -> void: # it's very important to use UNHANDLED INPUT so things on top can steal mouse input
 	body_state.handle_input(event)
 	if event.is_action_pressed("ui_cancel"):
 		Dialogs.add_pause_dialog()
-	
-func process_look(event):
+
+func process_look(event: InputEvent) -> void:
+	# mouse input is special...  everything else can use InputActions.
 	if event is InputEventMouseMotion:
-		
 		pitch -= event.relative.y * Config.mouse_sensitivity
 		yaw -= event.relative.x * Config.mouse_sensitivity
+		pitch = clamp(pitch, -PI/2, PI/2)
 		
-		var eps = 1e-6
-		pitch = clamp(pitch, -PI/2 + eps, PI/2 - eps)
-		
-		
+func process_action_look() -> void:
+	#don't use the event b/c it only updates on a change.
+	pitch += (Input.get_action_strength("look_up") 
+			- Input.get_action_strength("look_down")) * Config.controller_sensitivity
+	yaw += (Input.get_action_strength("look_left")
+			- Input.get_action_strength("look_right")) * Config.controller_sensitivity
+	pitch = clamp(pitch, -PI/2, PI/2)
+
 func allowed_to_jump():
 	var allowed_to_jump 
 	match is_unlocked("TRIPLE_JUMP"):
@@ -73,10 +72,9 @@ func process_jump(event):
 		Sound.play_sound("player_jump", 1 + (jump_counter - 1) * 0.1)
 		
 func process_shoot(event):
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == BUTTON_LEFT:
-			gun.shoot()
-		# TODO temp testing for now...
+	if event is InputEventAction and event.is_pressed("shoot"):
+		gun.shoot()
+			
 	if event is InputEventKey and event.pressed:
 		match event.scancode:
 			 KEY_1: if is_unlocked(Enums.UPGRADE_GUN_BLUE): gun.switch_to_color(BulletColor.BLUE)
