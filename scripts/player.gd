@@ -106,16 +106,15 @@ func process_walk(delta):
 	var old_y = velocity.y
 	
 	var goal_vel = Vector3(0,0,0)
-
 	
 	if Input.is_action_pressed("ui_up"):
-		goal_vel += (-cam.global_transform.basis.z * Vector3(1,0,1)).normalized()
+		goal_vel += (-cam.global_transform.basis.z * Vector3(1,0,1) * Input.get_action_strength("ui_up"))
 	if Input.is_action_pressed("ui_down"):
-		goal_vel += (cam.global_transform.basis.z * Vector3(1,0,1)).normalized()
+		goal_vel += (cam.global_transform.basis.z * Vector3(1,0,1) * Input.get_action_strength("ui_down"))
 	if Input.is_action_pressed("ui_left"):
-		goal_vel += (-cam.global_transform.basis.x * Vector3(1,0,1)).normalized()
+		goal_vel += (-cam.global_transform.basis.x * Vector3(1,0,1)* Input.get_action_strength("ui_left"))
 	if Input.is_action_pressed("ui_right"):
-		goal_vel += (cam.global_transform.basis.x * Vector3(1,0,1)).normalized()
+		goal_vel += (cam.global_transform.basis.x * Vector3(1,0,1) * Input.get_action_strength("ui_right"))
 		
 	if (goal_vel.length() > 1e-7): # don't divide by zero
 		goal_vel = goal_vel.normalized()
