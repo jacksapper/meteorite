@@ -36,23 +36,23 @@ func aim_at(pos):
 	var look_at_vec_2d = Vector2(look_at_vec.x, look_at_vec.z)
 	
 	# https://stackoverflow.com/a/2782712
-	var pitch = PI/2+atan(sqrt(pow(look_at_vec.x, 2) + pow(look_at_vec.z,2))/look_at_vec.y)
+	var pitch
+	if look_at_vec.y != 0:
+		pitch = PI/2+atan(sqrt(pow(look_at_vec.x, 2) + pow(look_at_vec.z,2))/look_at_vec.y)
+		if pitch > PI/2:
+			pitch -= PI
+		$rotation_yaw/rotation_pitch.transform.basis = Basis(Vector3(pitch,0,0))
+		 
 	var roll = 0#sin(OS.get_ticks_msec()/100.0) # this is damn funny 
 	var yaw = -look_at_vec_2d.angle()+PI/2
-	
-	if pitch > PI/2:
-		pitch -= PI
-	
-	
-	$rotation_yaw.global_transform.basis = Basis(Vector3(0,yaw,roll)) 
-	$rotation_yaw/rotation_pitch.transform.basis = Basis(Vector3(pitch,0,0)) 
+	$rotation_yaw.global_transform.basis = Basis(Vector3(0,yaw,roll)) # vector of vectors
+
 
 func _process(delta):
 
 
 	var ply_pos = PlayerData.get_player().global_transform.origin
 	raycast.look_at(ply_pos, Vector3(0,1,0)) # NOTE! -Z points towards the player, not +Z!
-	
 	ai_state.update(delta)
 
 
