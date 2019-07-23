@@ -87,7 +87,7 @@ func init(position, direction, color, is_fired_by_enemy = false):
 		
 	
 	global_transform.origin = position
-	velocity = direction * 10 
+	velocity = direction * 30
 	
 	self.color = color
 	
